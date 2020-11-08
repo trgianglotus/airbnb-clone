@@ -25,6 +25,7 @@ const C = (props: Props & FormikProps<FormValues>) => {
           prefix={<UserOutlined className="site-form-item-icon" />}
           placeholder="Email"
           component={InputField}
+          type="email"
         />
 
         <Field
@@ -32,6 +33,7 @@ const C = (props: Props & FormikProps<FormValues>) => {
           prefix={<LockOutlined className="site-form-item-icon" />}
           placeholder="Password"
           component={InputField}
+          type="password"
         />
 
         <AntForm.Item>
