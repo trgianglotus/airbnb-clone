@@ -2,7 +2,7 @@ import React from 'react'
 import { Form, Input, Button } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { FormikErrors, withFormik, FormikProps } from 'formik'
-import yup from 'yup'
+import { validUserSchema } from '@abb/common'
 
 interface FormValues {
   email: string
@@ -86,23 +86,8 @@ const C = (props: Props & FormikProps<FormValues>) => {
   )
 }
 
-export const duplicateEmail = 'already taken'
-export const emailNotLongEnough = 'email must be at least 3 characters'
-export const passwordNotLongEnough = 'password must be at least 3 characters'
-export const invalidEmail = 'email must be a valid email'
-
-const validationSchema = yup.object().shape({
-  email: yup
-    .string()
-    .min(3, emailNotLongEnough)
-    .max(255)
-    .email(invalidEmail)
-    .required(),
-  password: yup.string().min(3, passwordNotLongEnough).max(255).required(),
-})
-
 const RegisterView = withFormik<Props, FormValues>({
-  validationSchema,
+  validationSchema: validUserSchema,
   validateOnChange: false,
   mapPropsToValues: (props) => ({
     email: '',
