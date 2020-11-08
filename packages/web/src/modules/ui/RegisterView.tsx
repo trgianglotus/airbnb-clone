@@ -2,6 +2,7 @@ import React from 'react'
 import { Form, Input, Button } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { FormikErrors, withFormik, FormikProps } from 'formik'
+import yup from 'yup'
 
 interface FormValues {
   email: string
@@ -13,11 +14,14 @@ interface Props {
 }
 
 const C = (props: Props & FormikProps<FormValues>) => {
-  const onFinish = (values: any) => {
-    console.log('Received values of form: ', values)
-  }
-
-  const { values, handleBlur, handleChange, handleSubmit } = props
+  const {
+    values,
+    handleBlur,
+    handleChange,
+    handleSubmit,
+    touched,
+    errors,
+  } = props
 
   return (
     <div style={{ width: 400, margin: 'auto' }}>
@@ -28,10 +32,13 @@ const C = (props: Props & FormikProps<FormValues>) => {
         onFinish={handleSubmit}
       >
         <Form.Item
-          name="email"
           rules={[{ required: true, message: 'Please input your Email!' }]}
+          help={touched.email && errors.email ? errors.email : null}
+          validateStatus={touched.email && errors.email ? 'error' : 'success'}
         >
           <Input
+            type="email"
+            name="email"
             prefix={<UserOutlined className="site-form-item-icon" />}
             placeholder="Email"
             value={values.email}
@@ -40,10 +47,14 @@ const C = (props: Props & FormikProps<FormValues>) => {
           />
         </Form.Item>
         <Form.Item
-          name="password"
           rules={[{ required: true, message: 'Please input your Password!' }]}
+          help={touched.password && errors.password ? errors.password : null}
+          validateStatus={
+            touched.password && errors.password ? 'error' : 'success'
+          }
         >
           <Input
+            name="password"
             prefix={<LockOutlined className="site-form-item-icon" />}
             type="password"
             placeholder="Password"
@@ -75,7 +86,24 @@ const C = (props: Props & FormikProps<FormValues>) => {
   )
 }
 
+export const duplicateEmail = 'already taken'
+export const emailNotLongEnough = 'email must be at least 3 characters'
+export const passwordNotLongEnough = 'password must be at least 3 characters'
+export const invalidEmail = 'email must be a valid email'
+
+const validationSchema = yup.object().shape({
+  email: yup
+    .string()
+    .min(3, emailNotLongEnough)
+    .max(255)
+    .email(invalidEmail)
+    .required(),
+  password: yup.string().min(3, passwordNotLongEnough).max(255).required(),
+})
+
 const RegisterView = withFormik<Props, FormValues>({
+  validationSchema,
+  validateOnChange: false,
   mapPropsToValues: (props) => ({
     email: '',
     password: '',
