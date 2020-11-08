@@ -1,75 +1,46 @@
 import React from 'react'
-import { Form, Input, Button } from 'antd'
+import * as Antd from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
-import { FormikErrors, withFormik, FormikProps } from 'formik'
+import { FormikErrors, withFormik, FormikProps, Field, Form } from 'formik'
 import { validUserSchema } from '@abb/common'
+import { InputField } from '../shared/inputField'
 
 interface FormValues {
   email: string
   password: string
 }
 
+const { Form: AntForm, Button } = Antd
+
 interface Props {
   submit: (values: FormValues) => Promise<FormikErrors<FormValues | null>>
 }
 
 const C = (props: Props & FormikProps<FormValues>) => {
-  const {
-    values,
-    handleBlur,
-    handleChange,
-    handleSubmit,
-    touched,
-    errors,
-  } = props
-
   return (
     <div style={{ width: 400, margin: 'auto' }}>
-      <Form
-        name="normal_login"
-        className="login-form"
-        initialValues={{ remember: true }}
-        onFinish={handleSubmit}
-      >
-        <Form.Item
-          rules={[{ required: true, message: 'Please input your Email!' }]}
-          help={touched.email && errors.email ? errors.email : null}
-          validateStatus={touched.email && errors.email ? 'error' : 'success'}
-        >
-          <Input
-            type="email"
-            name="email"
-            prefix={<UserOutlined className="site-form-item-icon" />}
-            placeholder="Email"
-            value={values.email}
-            onChange={handleChange}
-            onBlur={handleBlur}
-          />
-        </Form.Item>
-        <Form.Item
-          rules={[{ required: true, message: 'Please input your Password!' }]}
-          help={touched.password && errors.password ? errors.password : null}
-          validateStatus={
-            touched.password && errors.password ? 'error' : 'success'
-          }
-        >
-          <Input
-            name="password"
-            prefix={<LockOutlined className="site-form-item-icon" />}
-            type="password"
-            placeholder="Password"
-            value={values.password}
-            onChange={handleChange}
-            onBlur={handleBlur}
-          />
-        </Form.Item>
-        <Form.Item>
+      <Form name="normal_login" className="login-form">
+        <Field
+          name="email"
+          prefix={<UserOutlined className="site-form-item-icon" />}
+          placeholder="Email"
+          component={InputField}
+        />
+
+        <Field
+          name="password"
+          prefix={<LockOutlined className="site-form-item-icon" />}
+          placeholder="Password"
+          component={InputField}
+        />
+
+        <AntForm.Item>
           <a className="login-form-forgot" href="/forgot-password">
             Forgot password
           </a>
-        </Form.Item>
+        </AntForm.Item>
 
-        <Form.Item>
+        <AntForm.Item>
           <Button
             type="primary"
             htmlType="submit"
@@ -77,10 +48,10 @@ const C = (props: Props & FormikProps<FormValues>) => {
           >
             Register
           </Button>
-        </Form.Item>
-        <Form.Item>
+        </AntForm.Item>
+        <AntForm.Item>
           Or <a href="/login">login now!</a>
-        </Form.Item>
+        </AntForm.Item>
       </Form>
     </div>
   )
